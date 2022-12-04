@@ -1,31 +1,39 @@
-# bot.py
+# Unseen Servant written by Niels Jautelat
 import os
 import discord
+import youtube_dl
 from discord.ext import commands
 from discord.utils import get
 from dotenv import load_dotenv
 
+#Loading the .env file, containing your personal and secret Discord Token
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+#This means the bot is allowed to do anything. Not ideal for an unknown Bot, but since it runs on your local maschine and you can check the source code this is fine
 intents = discord.Intents.all()
 
+#This initializes the bot and defines the way to interact with the bot as '!command'
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+#When it is ready to receive commands it will say that it is ready
 @bot.event
 async def on_ready():
     print("Bot is ready")
 
+#This command will make the bot join the voice channel
 @bot.command(name='join', help='The Bot joines the voice channel you are currently in')
 async def join(ctx):
     channel = ctx.message.author.voice.channel
     await channel.connect()
 
+#This command will make the bot leave the voice channel
 @bot.command(name='leave', help='The Bot leaves the voice channel it is currently in')
 async def leave(ctx):
     server = ctx.message.guild.voice_client
     await server.disconnect()
 
+#This command will make the bot play a specific local file
 @bot.command()
 async def play(ctx, file):
     channel = ctx.message.author.voice.channel
@@ -60,6 +68,7 @@ async def resume(ctx):
         await voice_client.resume()
     else:
         await ctx.send("The bot was not playing anything before this. Use play_song command")
+
 @bot.command(name='stop', help='Stops the song')
 async def stop(ctx):
     voice_client = ctx.message.guild.voice_client
@@ -72,5 +81,23 @@ async def stop(ctx):
 async def boop(ctx):
     response = 'boop'
     await ctx.send(response)
+
+@bot.command(name='download')
+async def download(ctx, url):
+    await ctx.send("Getting your music")
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+
+    await ctx.send("Finished Download")
 
 bot.run(TOKEN)
