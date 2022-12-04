@@ -110,7 +110,6 @@ async def playcollection(ctx, folder):
     
     global loopbreak
     if channel and not voice.is_playing() and not loopbreak:
-        print("Next Song")
         try:
             currentsong = random.choice(songs)
             voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong), after=lambda e: playnext(voice))
