@@ -74,19 +74,19 @@ async def play(ctx, file):
 
 @bot.command()
 async def BattleMusic(ctx):
-    #await stop(ctx)
+    stoploop(ctx)
     await playcollection(ctx, 'BattleMusic')
 @bot.command()
 async def CalmMusic(ctx):
-    #await stop(ctx)
+    stoploop(ctx)
     await playcollection(ctx, 'CalmMusic')
 @bot.command()
 async def SuspensefulMusic(ctx):
-    #await stop(ctx)
+    stoploop(ctx)
     await playcollection(ctx, 'SuspensefulMusic')
 @bot.command()
 async def TavernMusic(ctx):
-    #await stop(ctx)
+    stoploop(ctx)
     await playcollection(ctx, 'TavernMusic')
 
 
@@ -109,7 +109,7 @@ async def playcollection(ctx, folder):
         if file.endswith(".mp3"):
             songs.append(file)
 
-    async def playnext(voice):
+    def playnext(voice):
         global loopbreak
         if loopbreak:
             loopbreak = False
@@ -135,36 +135,43 @@ async def playcollection(ctx, folder):
             voice.is_playing()
         except:
             print("Error")
+
+def stoploop(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client and voice_client.is_playing():
+        global loopbreak
+        loopbreak = True
+        voice_client.stop()
     
 
 
 @bot.command(name='pause', help='This command pauses the song')
 async def pause(ctx):
     voice_client = ctx.message.guild.voice_client
-    if voice_client.is_playing():
-        await voice_client.pause()
+    if voice_client and voice_client.is_playing():
+        voice_client.pause()
     else:
         await ctx.send("The bot is not playing anything at the moment.")
     
 @bot.command(name='resume', help='Resumes the song')
 async def resume(ctx):
     voice_client = ctx.message.guild.voice_client
-    if voice_client.is_paused():
-        await voice_client.resume()
+    if voice_client and voice_client.is_paused():
+        voice_client.resume()
     else:
         await ctx.send("The bot was not playing anything before this.")
 
-@bot.command(name='stop', help='Stops the song')
-async def stop(ctx):
+@bot.command(name='skip', help='Stops the song')
+async def skip(ctx):
     voice_client = ctx.message.guild.voice_client
-    if voice_client.is_playing():
-        await voice_client.stop()
-        #if voice_client.is_playing():
-           # global loopbreak
-            #loopbreak = True
-            #await voice_client.stop()
+    if voice_client and voice_client.is_playing():
+        voice_client.stop()
     else:
         await ctx.send("The bot is not playing anything at the moment.")
+
+@bot.command(name='stop', help='Stops the song')
+async def stop(ctx):
+    stoploop(ctx)
 
 
 
