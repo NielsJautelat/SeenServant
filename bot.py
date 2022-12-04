@@ -101,6 +101,7 @@ async def playcollection(ctx, folder):
         try:
             currentsong = random.choice(songs)
             voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong), after=lambda e: playnext(voice))
+            print(f"Now playing: {folder}/{currentsong}")
             voice.source = discord.PCMVolumeTransformer(voice.source)
             voice.source.volume = 0.07
             voice.is_playing()
@@ -113,6 +114,7 @@ async def playcollection(ctx, folder):
         try:
             currentsong = random.choice(songs)
             voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong), after=lambda e: playnext(voice))
+            print(f"Now playing: {folder}/{currentsong}")
             voice.source = discord.PCMVolumeTransformer(voice.source)
             voice.source.volume = 0.07
             voice.is_playing()
