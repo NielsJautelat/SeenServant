@@ -8,26 +8,63 @@ from discord.utils import get
 from dotenv import load_dotenv
 from static_ffmpeg import run
 
+print("Initalizing...")
+
 #A variable to help break a recursive loop
 loopbreak = False
 
 #Loading the .env file, containing your personal and secret Discord Token
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-
-#This means the bot is allowed to do anything. Not ideal for an unknown Bot, but since it runs on your local maschine and you can check the source code this is fine
-intents = discord.Intents.all()
-
-#This initializes the bot and defines the way to interact with the bot as '!command'
-bot = commands.Bot(command_prefix='!', intents=intents)
+print("Loading the \'.env\' file...")
+try:
+    load_dotenv()
+    TOKEN = os.getenv('DISCORD_TOKEN')
+except Exception as e:
+    print("ERROR: No file \'.env\' containing the token was found")
+    print(e)
+    exit()
 
 #Loads ffmpeg
-ffmpeg, ffprobe = run.get_or_fetch_platform_executables_else_raise()
+print("Loading FFMPEG...")
+try:
+    ffmpeg, ffprobe = run.get_or_fetch_platform_executables_else_raise()
+except Exception as e:
+    print("ERROR: FFMPEG failed to load")
+    print(e)
+    exit()
+
+#Saves the directory path for future reference
+print("Finding the directory...")
+try:
+    directoryPath = os.path.dirname(__file__)
+except Exception as e:
+    print("ERROR: Directory not found")
+    print(e)
+    exit()
+
+#This means the bot is allowed to do anything. Not ideal for an unknown Bot, but since it runs on your local maschine and you can check the source code this is fine
+print("Loading intents...")
+try:
+    intents = discord.Intents.all()
+except Exception as e:
+    print("ERROR: Intents could not be initalized")
+    print(e)
+    exit()
+
+#This initializes the bot and defines the way to interact with the bot as '!command'
+print("Initializing Bot...")
+try:
+    bot = commands.Bot(command_prefix='!', intents=intents)
+except Exception as e:
+    print("ERROR: Bot could not be started")
+    print(e)
+    exit()
+
 
 #When it is ready to receive commands it will say that it is ready
 @bot.event
 async def on_ready():
-    print("Bot is ready")
+    print("The Bot is ready")
+    print("Awaing commands")
 
 #This command will make the bot join the voice channel that you are currently in
 @bot.command(name='join', help='The Bot joines the voice channel you are currently in')
@@ -52,7 +89,7 @@ async def play(ctx, file):
     else:
         voice = await channel.connect()
 
-    voice.play(discord.FFmpegPCMAudio(file, executable=ffmpeg), after=lambda e: print(f"{file} has finished playing"))
+    voice.play(discord.FFmpegPCMAudio(directoryPath + '\\' + file, executable=ffmpeg), after=lambda e: print(f"{file} has finished playing"))
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.07
 
@@ -92,7 +129,7 @@ async def playcollection(ctx, folder):
     await ctx.send(f"Playing: {folder_name[0]}")
 
     songs = []
-    for file in os.listdir(folder):
+    for file in os.listdir(directoryPath + '\\' + folder):
         if file.endswith(".mp3"):
             songs.append(file)
 
@@ -103,7 +140,7 @@ async def playcollection(ctx, folder):
             print("In Break")
             return
         currentsong = random.choice(songs)
-        voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
+        voice.play(discord.FFmpegPCMAudio(directoryPath + '\\' + folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
         print(f"Now playing: {folder}/{currentsong}")
         voice.source = discord.PCMVolumeTransformer(voice.source)
         voice.source.volume = 0.07
@@ -112,7 +149,7 @@ async def playcollection(ctx, folder):
     global loopbreak
     if channel and not voice.is_playing() and not loopbreak:        
         currentsong = random.choice(songs)
-        voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
+        voice.play(discord.FFmpegPCMAudio(directoryPath + '\\' + folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
         print(f"Now playing: {folder}/{currentsong}")
         voice.source = discord.PCMVolumeTransformer(voice.source)
         voice.source.volume = 0.07
