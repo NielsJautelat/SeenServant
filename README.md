@@ -6,7 +6,7 @@ A credit or mention would be nice, but being honest is enough
 
 ## How to set it up
 
-In the folder with the bot.py file, create a file called ".env". This file will be empty with the exception of the line: "DISCORD_TOKEN=XXXXX", where XXXXX is the Token you get in your Discord Developer Account.
+First you got to set up an Application and a Bot in your Discord Developer Portal. Then you reset your Bot Token. It will be reaveled only once, so make sure to copy it somewhere. Then open the file called ".env" and change the 'XXXXX' in the file to your Token.
 
 After that run setup.bat and you are good to go. (Or install the requirements, by opening navigating into the directory using your terminal/cmd and running the command 'pip install -r requirements.txt')
 
