@@ -6,6 +6,7 @@ import youtube_dl
 from discord.ext import commands
 from discord.utils import get
 from dotenv import load_dotenv
+from static_ffmpeg import run
 
 #A variable to help break a recursive loop
 loopbreak = False
@@ -19,6 +20,9 @@ intents = discord.Intents.all()
 
 #This initializes the bot and defines the way to interact with the bot as '!command'
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+#Loads ffmpeg
+ffmpeg, ffprobe = run.get_or_fetch_platform_executables_else_raise()
 
 #When it is ready to receive commands it will say that it is ready
 @bot.event
@@ -48,7 +52,7 @@ async def play(ctx, file):
     else:
         voice = await channel.connect()
 
-    voice.play(discord.FFmpegPCMAudio(file), after=lambda e: print(f"{file} has finished playing"))
+    voice.play(discord.FFmpegPCMAudio(file, executable=ffmpeg), after=lambda e: print(f"{file} has finished playing"))
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.07
 
@@ -98,27 +102,21 @@ async def playcollection(ctx, folder):
             loopbreak = False
             print("In Break")
             return
-        try:
-            currentsong = random.choice(songs)
-            voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong), after=lambda e: playnext(voice))
-            print(f"Now playing: {folder}/{currentsong}")
-            voice.source = discord.PCMVolumeTransformer(voice.source)
-            voice.source.volume = 0.07
-            voice.is_playing()
-        except:
-            print("Error")
+        currentsong = random.choice(songs)
+        voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
+        print(f"Now playing: {folder}/{currentsong}")
+        voice.source = discord.PCMVolumeTransformer(voice.source)
+        voice.source.volume = 0.07
+        voice.is_playing()
     
     global loopbreak
-    if channel and not voice.is_playing() and not loopbreak:
-        try:
-            currentsong = random.choice(songs)
-            voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong), after=lambda e: playnext(voice))
-            print(f"Now playing: {folder}/{currentsong}")
-            voice.source = discord.PCMVolumeTransformer(voice.source)
-            voice.source.volume = 0.07
-            voice.is_playing()
-        except:
-            print("Error")
+    if channel and not voice.is_playing() and not loopbreak:        
+        currentsong = random.choice(songs)
+        voice.play(discord.FFmpegPCMAudio(folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
+        print(f"Now playing: {folder}/{currentsong}")
+        voice.source = discord.PCMVolumeTransformer(voice.source)
+        voice.source.volume = 0.07
+        voice.is_playing()
 
 #This function will stop the playlist
 def stoploop(ctx):

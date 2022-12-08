@@ -8,9 +8,6 @@ A credit or mention would be nice, but being honest is enough
 
 In the folder with the bot.py file, create a file called ".env". This file will be empty with the exception of the line: "DISCORD_TOKEN=XXXXX", where XXXXX is the Token you get in your Discord Developer Account.
 
-Then you will put "ffmpeg.exe", "ffplay.exe" and "ffprobe.exe" into the same folder.
-You can get them here: <https://www.gyan.dev/ffmpeg/builds/>
-
 After that run setup.bat and you are good to go. (Or install the requirements, by opening navigating into the directory using your terminal/cmd and running the command 'pip install -r requirements.txt')
 
 Run bot.py and your bot is running as long as you keep the terminal/cmd open. (Sometimes the working directory is not the same as the folder with 'bot.py' in it. Don't know why, but opening the folder in VS Code and then running it, works every time)
