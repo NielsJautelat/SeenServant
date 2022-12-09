@@ -64,12 +64,12 @@ except Exception as e:
 @bot.event
 async def on_ready():
     print("The Bot is ready")
-    print("Awaing commands")
+    print("Awaiting commands...")
 
 #This command will make the bot join the voice channel that you are currently in
 @bot.command(name='join', help='The Bot joines the voice channel you are currently in')
 async def join(ctx):
-    print("Bot Command: join")
+    print("Bot Command: join from User {}".format(ctx.message.author))
     try:
         if not ctx.message.author.voice:
             await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
@@ -84,7 +84,7 @@ async def join(ctx):
 #This command will make the bot leave the voice channel
 @bot.command(name='leave', help='The Bot leaves the voice channel it is currently in')
 async def leave(ctx):
-    print("Bot Command: leave")
+    print("Bot Command: leave from User {}".format(ctx.message.author))
     try:
         voice_client = ctx.message.guild.voice_client
         if voice_client.is_connected():
@@ -98,7 +98,7 @@ async def leave(ctx):
 #This command will make the bot play a specific local mp3 file, based on the relative path to the file
 @bot.command(name='play', help='The Bot plays a specific mp3 file \'!play song.mp3\'')
 async def play(ctx, file):
-    print("Bot Command: play")
+    print("Bot Command: play from User {}".format(ctx.message.author))
     channel = ctx.message.author.voice.channel
     voice = get(bot.voice_clients, guild=ctx.guild)
     try:
@@ -120,22 +120,22 @@ async def play(ctx, file):
 #These commands make the Bot play a random rotation of mp3 files from specific folder/directory
 @bot.command(name='BattleMusic', help='Plays a random rotation of mp3 files in your BattleMusic folder/directory')
 async def BattleMusic(ctx):
-    print("Bot Command: BattleMusic")
+    print("Bot Command: BattleMusic from User {}".format(ctx.message.author))
     stoploop(ctx)
     await playcollection(ctx, 'BattleMusic')
 @bot.command(name='CalmMusic', help='Plays a random rotation of mp3 files in your CalmMusic folder/directory')
 async def CalmMusic(ctx):
-    print("Bot Command: CalmMusic")
+    print("Bot Command: CalmMusic from User {}".format(ctx.message.author))
     stoploop(ctx)
     await playcollection(ctx, 'CalmMusic')
 @bot.command(name='SuspensefulMusic', help='Plays a random rotation of mp3 files in your SuspensefulMusic folder/directory')
 async def SuspensefulMusic(ctx):
-    print("Bot Command: SuspensefulMusic")
+    print("Bot Command: SuspensefulMusic from User {}".format(ctx.message.author))
     stoploop(ctx)
     await playcollection(ctx, 'SuspensefulMusic')
 @bot.command(name='TavernMusic', help='Plays a random rotation of mp3 files in your TavernMusic folder/directory')
 async def TavernMusic(ctx):
-    print("Bot Command: TavernMusic")
+    print("Bot Command: TavernMusic from User {}".format(ctx.message.author))
     stoploop(ctx)
     await playcollection(ctx, 'TavernMusic')
 
@@ -208,7 +208,7 @@ def stoploop(ctx):
 #This command pauses the song
 @bot.command(name='pause', help='This command pauses the song')
 async def pause(ctx):
-    print("Bot Command: pause")
+    print("Bot Command: pause from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_playing():
         voice_client.pause()
@@ -218,7 +218,7 @@ async def pause(ctx):
 #This command resumes the paused song
 @bot.command(name='resume', help='Resumes the song')
 async def resume(ctx):
-    print("Bot Command: resume")
+    print("Bot Command: resume from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_paused():
         voice_client.resume()
@@ -228,7 +228,7 @@ async def resume(ctx):
 #This command skips the current song
 @bot.command(name='skip', help='Stops the song')
 async def skip(ctx):
-    print("Bot Command: skip")
+    print("Bot Command: skip from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_playing():
         voice_client.stop()
@@ -238,13 +238,13 @@ async def skip(ctx):
 #This command stops the playlist
 @bot.command(name='stop', help='Stops the song')
 async def stop(ctx):
-    print("Bot Command: stop")
+    print("Bot Command: stop from User {}".format(ctx.message.author))
     stoploop(ctx)
 
 #This hidden command is there to download music from YouTube onto your computer so that you can put the mp3 files into the respective folders/directories
 @bot.command(hidden=True)
 async def download(ctx, url):
-    print("Bot Command: download")
+    print("Bot Command: download from User {}".format(ctx.message.author))
     await ctx.send("Getting your music")
 
     ydl_opts = {
@@ -264,14 +264,14 @@ async def download(ctx, url):
 #boop
 @bot.command(name='boop', help='boop')
 async def boop(ctx):
-    print("Bot Command: boop")
-    print("{} boopt the Bot".format(ctx.message.author.name))
+    print("Bot Command: boop".format(ctx.message.author))
     response = 'boop'
     await ctx.send(response)
 
-@bot.command(name='shutdown', help='Stops the bot')
+#shuts the bot down 
+@bot.command(hidden=True)
 async def shutdown(ctx):
-    print("Bot Command: Shutting Down")
+    print("Bot Command: Shutting Down from User {}".format(ctx.message.author))
     voice = get(bot.voice_clients, guild=ctx.guild)
     if voice and voice.is_connected():
         await leave(ctx)
