@@ -6,11 +6,11 @@ A credit or mention would be nice, but being honest is enough
 
 ## How to set it up
 
-First you got to set up an Application and a Bot in your Discord Developer Portal. Then you reset your Bot Token. It will be reaveled only once, so make sure to copy it somewhere. After that in the UnseenServant directory, create a file called ".env" and add the line 'DISCORD_TOKEN=XXXXX', where XXXXX is the Token of your Bot.
+First, you got to set up an Application and a Bot in your Discord Developer Portal. Then, you reset your Bot Token. It will be reaveled only once so make sure to copy it somewhere. After that, in the UnseenServant directory, create a file called ".env" and add the line 'DISCORD_TOKEN=XXXXX' where XXXXX is the Token of your Bot.
 
-Finally, if you are on Windows run start.bat and you are good to go. The bot is running and will continue to do so, until you close the terminal/cmd or until someone types "!shutdown" in a text channel that the Bot can see.
+Finally, if you are on Windows run 'start.bat' and you are good to go. The bot is running and will continue to do so, until you close the terminal/cmd or until someone types "!shutdown" in a text channel that the Bot can see.
 
-Or if you aren't using Windows, or you want to do in manually install the requirements, by opening navigating into the directory using your terminal/cmd and running the command 'pip install -r requirements.txt'. Then you can start the bot with 'python bot.py'.
+Or, if you aren't using Windows or you want to do in manually, install the requirements by opening your terminal/cmd in the project directory and running the command 'pip install -r requirements.txt'. Then you can start the bot with 'python bot.py'.
 
 ## Commands
 
