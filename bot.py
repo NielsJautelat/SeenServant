@@ -267,7 +267,7 @@ async def download(ctx, url):
 #boop
 @bot.command(name='boop', help='boop')
 async def boop(ctx):
-    print("Bot Command: boop".format(ctx.message.author))
+    print("Bot Command: boop from User {}".format(ctx.message.author))
     response = 'boop'
     await ctx.send(response)
 
