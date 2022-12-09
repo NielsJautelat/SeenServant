@@ -64,4 +64,8 @@ boop
 
 ### !download
 
-This command downloads a video from YouTube in a mp3 format, so that you can place it in one of the folders
+This command downloads a video from YouTube in a mp3 format, so that you can place it in one of the folders.
+
+### !shutdown
+
+This commmand shuts the bot down.
