@@ -99,6 +99,7 @@ async def leave(ctx):
 @bot.command(name='play', help='The Bot plays a specific mp3 file \'!play song.mp3\'')
 async def play(ctx, file):
     print("Bot Command: play from User {}".format(ctx.message.author))
+    stoploop(ctx)
     channel = ctx.message.author.voice.channel
     voice = get(bot.voice_clients, guild=ctx.guild)
     try:
@@ -173,6 +174,9 @@ async def playcollection(ctx, folder):
     else:
         await ctx.send(f"Playing: {folder_name[0]}")
     
+    global loopbreak
+    loopbreak = False
+    
     def playnext(voice):
         print("Internal Function: playnext")
         global loopbreak
@@ -187,7 +191,6 @@ async def playcollection(ctx, folder):
         voice.source.volume = 0.07
         voice.is_playing()
     
-    global loopbreak
     if channel and not voice.is_playing() and not loopbreak:        
         currentsong = random.choice(songs)
         voice.play(discord.FFmpegPCMAudio(directoryPath + '\\' + folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice))
