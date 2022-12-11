@@ -4,13 +4,13 @@ This is my own private DiscordMusic Bot.
 You are free to use it, noncommercially yourself, as long as you don't claim it as your own work.
 A credit or mention would be nice, but being honest is enough.
 
+## Requirements
+
+This bot is being developed with Python 3.10. While other Python versions might work, I can not guarantee it.
+
+And when installing the bot, make sure to use the latest release that can be found here: https://github.com/NielsJautelat/UnseenServant/releases/latest <br/>I can guarantee that it will work a whole lot better than my code that is being actively changed.
+
 ## How to set it up
-
-Please, when installing the bot use the latest release that can be found here: https://github.com/NielsJautelat/UnseenServant/releases/latest
-
-I can guarantee that it will work a whole lot better than my code that is being actively changed.
-
-Also, Python 3.10 is required to run this bot. (Others will probably work, but I use 3.10 to develop it)
 
 First, you got to set up an Application and a Bot in your Discord Developer Portal. Then, you reset your Bot Token. It will be reaveled only once so make sure to copy it somewhere. After that, in the UnseenServant directory, create a file called ".env" and add the line 'DISCORD_TOKEN=XXXXX' where XXXXX is the Token of your Bot.
 
