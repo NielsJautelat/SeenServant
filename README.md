@@ -1,4 +1,4 @@
-# UnseenServant
+# SeenServant
 
 This is my own private DiscordMusic Bot.
 You are free to use it, noncommercially yourself, as long as you don't claim it as your own work.
