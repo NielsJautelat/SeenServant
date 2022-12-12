@@ -1,4 +1,4 @@
-# Unseen Servant written by Niels Jautelat
+# Seen Servant written by Niels Jautelat
 import os
 import random
 import discord
