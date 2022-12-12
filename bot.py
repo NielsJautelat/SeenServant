@@ -151,22 +151,22 @@ async def play(ctx, file):
 
 # These commands make the Bot play a random rotation of mp3 files from specific folder/directory.
 # i.e. randomly playing the audio files in the BattleMusic/CalmMusic/SuspensefulMusic/TavernMusic directory.
-@bot.command(name='BattleMusic', help='Plays a random rotation of mp3 files in your BattleMusic folder/directory')
+@bot.command(name='BattleMusic', help='Plays mp3 files randomly from the BattleMusic folder')
 async def BattleMusic(ctx):
     print("Bot Command: BattleMusic from User {}".format(ctx.message.author))
     await playcollection(ctx, 'BattleMusic')
 
-@bot.command(name='CalmMusic', help='Plays a random rotation of mp3 files in your CalmMusic folder/directory')
+@bot.command(name='CalmMusic', help='Plays mp3 files randomly from the CalmMusic folder')
 async def CalmMusic(ctx):
     print("Bot Command: CalmMusic from User {}".format(ctx.message.author))
     await playcollection(ctx, 'CalmMusic')
 
-@bot.command(name='SuspensefulMusic', help='Plays a random rotation of mp3 files in your SuspensefulMusic folder/directory')
+@bot.command(name='SuspensefulMusic', help='Plays mp3 files randomly from the SuspensefulMusic folder')
 async def SuspensefulMusic(ctx):
     print("Bot Command: SuspensefulMusic from User {}".format(ctx.message.author))
     await playcollection(ctx, 'SuspensefulMusic')
 
-@bot.command(name='TavernMusic', help='Plays a random rotation of mp3 files in your TavernMusic folder/directory')
+@bot.command(name='TavernMusic', help='Plays mp3 files randomly from the TavernMusic folder')
 async def TavernMusic(ctx):
     print("Bot Command: TavernMusic from User {}".format(ctx.message.author))
     await playcollection(ctx, 'TavernMusic')
