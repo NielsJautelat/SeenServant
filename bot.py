@@ -343,6 +343,6 @@ async def shutdown(ctx):
         await leave(ctx)
     exit()
 
-# This command starts the bot.
+# This will starts the bot.
 # When it is ready to receive commands it will tell you so.
 bot.run(TOKEN)
