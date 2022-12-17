@@ -334,6 +334,25 @@ async def boop(ctx):
     response = 'boop'
     await ctx.send(response)
 
+# This commands deafens the bot in the voice channel
+@bot.command(name='deafen', help='This commands deafens the bot in the voice channel')
+async def deafen(ctx):
+    try:
+        voice_client = get(bot.voice_clients, guild=ctx.guild)
+    except Exception as e:
+        print("Error: Failed to interface with my voice")
+        return
+    await ctx.guild.change_voice_state(channel=voice_client.channel, self_mute=False, self_deaf=True)
+
+#This comand just prints out a short info message
+@bot.command(name='info', help='info')
+async def info(ctx):
+    await ctx.send("HI,")
+    await ctx.send("I am the Seen Servant.")
+    await ctx.send("(I used to be unseen, but then they discovered me... Also there were other bots named Unseen Servant, so I changed my name to the Seen Servant)")
+    await ctx.send("A bot developed as a utility for online D&D and other TTRPGs.")
+    await ctx.send("I am still very unfinished and am actively worked on by my creator Niels Jautelat.")
+
 # This hidden command shuts the bot down. 
 @bot.command(hidden=True)
 async def shutdown(ctx):

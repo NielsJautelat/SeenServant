@@ -8,7 +8,7 @@ A credit or mention would be nice, but being honest is enough.
 
 This bot is being developed with Python 3.10. While other Python versions might work, I can not guarantee it.
 
-And when installing the bot, make sure to use the latest release that can be found here: https://github.com/NielsJautelat/UnseenServant/releases/latest <br/>I can guarantee that it will work a whole lot better than my code that is being actively changed.
+And when installing the bot, make sure to use the latest release that can be found here: https://github.com/NielsJautelat/SeenServant/releases/latest <br/>I can guarantee that it will work a whole lot better than my code that is being actively changed.
 
 ## How to set it up
 
@@ -64,9 +64,17 @@ This command stops the current song and prevents more songs from playing.
 
 This command makes the bot leave the voice channel.
 
+### !deafen
+
+This commands deafens the bot in the voice channel
+
 ### !boop
 
 boop
+
+### !info
+
+This command prints a short info message
 
 ### !download
 
