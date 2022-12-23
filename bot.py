@@ -95,8 +95,15 @@ async def join_InternalFunction(ctx):
             await channel.connect()
     except Exception as e:
         print("Error: could not join voice channel of {}".format(ctx.message.author.name))
+        await ctx.send("The bot failed to join the voice channel")
         print(e)
-    await ctx.guild.change_voice_state(channel=channel, self_mute=False, self_deaf=True)
+        return
+    try:
+        await ctx.guild.change_voice_state(channel=channel, self_mute=False, self_deaf=True)
+    except Exception as e:
+        print("ERROR: Failed to deafen the bot")
+        await ctx.send("The bot failed to mute itself. Sorry for the inconvenience. You can always try the deafen command at a later point. Also don't trust any bot that isn't deafend.")
+        print(e)
 
 # This command will make the bot leave the voice channel it is in.
 # If it isn't in a voice channel, the bot will be very disappointed in you.
@@ -108,10 +115,12 @@ async def leave(ctx):
         if voice_client.is_connected():
             await voice_client.disconnect()
         else:
-            await ctx.send("The bot is not connected to a voice channel.")
+            await ctx.send("The bot is not connected to a voice channel. (Or maybe it rebooted, while it was in a voice channel, in that case it will leave shortly)")
     except Exception as e:
         print("Error could not leave voice channel")
+        await ctx.send("The bot failed to leave its voice channel.")
         print(e)
+        return
 
 # This command will make the bot play a specific local mp3 file, based on the relative path to the file.
 # i.e. '!play song.mp3'
@@ -126,6 +135,8 @@ async def play(ctx, file):
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
         print("Error: Failed to interface with my voice")
+        await ctx.send("The bot failed to find its own voice.")
+        print(e)
         return
 
     try:
@@ -137,7 +148,9 @@ async def play(ctx, file):
         await ctx.send(f"Playing: {file_name[0]}")
     except Exception as e:
         print("ERROR: Failed to play audio file")
+        await ctx.send(f"The bot failed to play {file}. Are you sure you have spelled it correctly and is at its proper place?")
         print(e)
+        return
 
 # These commands make the Bot play a random rotation of mp3 files from specific folder/directory.
 # i.e. randomly playing the audio files in the BattleMusic/CalmMusic/SuspensefulMusic/TavernMusic directory.
@@ -175,6 +188,8 @@ async def playcollection(ctx, folder):
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
         print("Error: Failed to interface with my voice")
+        await ctx.send("The bot failed to find its own voice.")
+        print(e)
         return
 
     folder_name = folder.rsplit("-", 2)
@@ -190,7 +205,7 @@ async def playcollection(ctx, folder):
             songs.append(file)
 
     if songs.count == 0:
-        await ctx.send(f"{folder_name[0]} could not be found as there were no mp3 files found")
+        await ctx.send(f"No mp3 files were found in the {folder_name[0]} folder")
         return
     else:
         await ctx.send(f"Playing: {folder_name[0]}")
@@ -216,6 +231,7 @@ async def playcollection(ctx, folder):
         except Exception as e:
             print("ERROR: Failed to play audio file")
             print(e)
+            return
     
     if voice_client and not voice_client.is_playing():        
         currentsong = random.choice(songs)
@@ -228,6 +244,7 @@ async def playcollection(ctx, folder):
         except Exception as e:
             print("ERROR: Failed to play audio file")
             print(e)
+            return
 
 # This function will stop the playback of audio files.
 # It additionally sets a flag so that the bot doesn't simply go to the next song, but also stops picking the next random song.
@@ -245,7 +262,13 @@ async def pause(ctx):
     print("Bot Command: pause from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_playing():
-        voice_client.pause()
+        try:
+            voice_client.pause()
+        except Exception as e:
+            print("ERROR: Failed to pause playback")
+            await ctx.send("The bot failed to pause the playback... I don't know what happens now...")
+            print(e)
+            return
     else:
         await ctx.send("The bot is not playing anything at the moment.")
     
@@ -255,7 +278,13 @@ async def resume(ctx):
     print("Bot Command: resume from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_paused():
-        voice_client.resume()
+        try:
+            voice_client.resume()
+        except Exception as e:
+            print("ERROR: Failed to resume playback")
+            await ctx.send("The bot failed to resume the playback. Maybe you could try using the stop command and then start playback again.")
+            print(e)
+            return
     else:
         await ctx.send("The bot was not playing anything before this.")
 
@@ -267,7 +296,13 @@ async def skip(ctx):
     print("Bot Command: skip from User {}".format(ctx.message.author))
     voice_client = ctx.message.guild.voice_client
     if voice_client and voice_client.is_playing():
-        voice_client.stop()
+        try:
+            voice_client.stop()
+        except Exception as e:
+            print("ERROR: Failed to skip the current audio file")
+            await ctx.send("The bot failed to skip the current adio file.")
+            print(e)
+            return
     else:
         await ctx.send("The bot is not playing anything at the moment.")
 
@@ -275,8 +310,14 @@ async def skip(ctx):
 # This will both stop the current song and signal to the bot that it shouldn't select a new one.
 @bot.command(name='stop', help='Stops the song')
 async def stop(ctx):
-    print("Bot Command: stop from User {}".format(ctx.message.author))
-    stoploop(ctx)
+    try:
+        print("Bot Command: stop from User {}".format(ctx.message.author))
+        stoploop(ctx)
+    except Exception as e:
+        print("ERROR: Failed to stop the playback")
+        await ctx.send("The bot failed to stop the playback. Don't worry about it, was probably just the wind.")
+        print(e)
+        return
 
 # This hidden command is there to download music from YouTube onto your computer, in a mp3 format.
 # You can use it to get the audio files that you want to play with your bot.
@@ -313,9 +354,17 @@ async def deafen(ctx):
     try:
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
-        print("Error: Failed to interface with my voice")
+        print("ERROR: Failed to interface with my voice")
+        await ctx.send("The bot failed to find its own voice.")
+        print(e)
         return
-    await ctx.guild.change_voice_state(channel=voice_client.channel, self_mute=False, self_deaf=True)
+    try:
+        await ctx.guild.change_voice_state(channel=voice_client.channel, self_mute=False, self_deaf=True)
+    except Exception as e:
+        print("ERROR: Failed to deafen the bot")
+        await ctx.send("The bot failed to deafen itself.")
+        print(e)
+        return
 
 #This comand just prints out a short info message
 @bot.command(name='info', help='info')
