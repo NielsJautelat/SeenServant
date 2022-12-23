@@ -75,11 +75,17 @@ async def on_ready():
     print("Awaiting commands...")
 
 # This command will make the bot join the voice channel that you are currently in.
-# If you aren't in one, it will be very upset at you.
-# In case you restarted the bot, while it was in a voice channel, it won't realize that it still is in one.
+# Internally this will call the join_InternalFunction function.
 @bot.command(name='join', help='The Bot joines the voice channel you are currently in')
 async def join(ctx):
     print("Bot Command: join from User {}".format(ctx.message.author))
+    await join_InternalFunction(ctx)
+
+# This internal function will make the bot join the voice channel that you are currently in.
+# If you aren't in one, it will be very upset at you.
+# In case you restarted the bot, while it was in a voice channel, it won't realize that it still is in one.
+async def join_InternalFunction(ctx):
+    print("Internal Function: join from User {}".format(ctx.message.author))
     try:
         if not ctx.message.author.voice:
             await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
@@ -90,6 +96,7 @@ async def join(ctx):
     except Exception as e:
         print("Error: could not join voice channel of {}".format(ctx.message.author.name))
         print(e)
+    await ctx.guild.change_voice_state(channel=channel, self_mute=False, self_deaf=True)
 
 # This command will make the bot leave the voice channel it is in.
 # If it isn't in a voice channel, the bot will be very disappointed in you.
@@ -114,29 +121,12 @@ async def leave(ctx):
 async def play(ctx, file):
     print("Bot Command: play from User {}".format(ctx.message.author))
     stoploop(ctx)
-    try:
-        if not ctx.message.author.voice:
-            await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
-            return
-        else:
-            channel = ctx.message.author.voice.channel
-    except Exception as e:
-        print("Error: could not join voice channel of {}".format(ctx.message.author.name))
-        print(e)
+    await join_InternalFunction(ctx)
     try:
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
         print("Error: Failed to interface with my voice")
         return
-    
-    try:
-        if voice_client and voice_client.is_connected():
-            await voice_client.move_to(channel)
-        else:
-            voice_client = await channel.connect()
-    except Exception as e:
-        print("Error could not join voice channel")
-        print(e)
 
     try:
         voice_client.play(discord.FFmpegPCMAudio(directoryPath + '\\' + file, executable=ffmpeg), after=lambda e: print(f"{file} has finished playing"))
@@ -180,29 +170,12 @@ async def TavernMusic(ctx):
 async def playcollection(ctx, folder):
     print("Internal Function: playcollection")
     stoploop(ctx)
-    try:
-        if not ctx.message.author.voice:
-            await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
-            return
-        else:
-            channel = ctx.message.author.voice.channel
-    except Exception as e:
-        print("Error: could not join voice channel of {}".format(ctx.message.author.name))
-        print(e)
+    await join_InternalFunction(ctx)
     try:
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
         print("Error: Failed to interface with my voice")
         return
-    
-    try:
-        if voice_client and voice_client.is_connected():
-            await voice_client.move_to(channel)
-        else:
-            voice_client = await channel.connect()
-    except Exception as e:
-        print("Error could not join voice channel")
-        print(e)
 
     folder_name = folder.rsplit("-", 2)
 
@@ -244,7 +217,7 @@ async def playcollection(ctx, folder):
             print("ERROR: Failed to play audio file")
             print(e)
     
-    if channel and not voice_client.is_playing() and not loopbreak:        
+    if voice_client and not voice_client.is_playing():        
         currentsong = random.choice(songs)
         try:
             voice_client.play(discord.FFmpegPCMAudio(directoryPath + '\\' + folder + "/" + currentsong, executable=ffmpeg), after=lambda e: playnext(voice_client))
