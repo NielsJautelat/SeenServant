@@ -12,7 +12,7 @@ And when installing the bot, make sure to use the latest release that can be fou
 
 ## How to set it up
 
-First, you got to set up an Application and a Bot in your Discord Developer Portal. Then, you reset your Bot Token. It will be reaveled only once so make sure to copy it somewhere. After that, in the UnseenServant directory, create a file called ".env" and add the line 'DISCORD_TOKEN=XXXXX' where XXXXX is the Token of your Bot.
+First, you got to set up an Application and a Bot in your Discord Developer Portal. Then, you reset your Bot Token. It will be reaveled only once so make sure to copy it somewhere. After that, in the SeenServant directory, create a file called ".env" and add the line 'DISCORD_TOKEN=XXXXX' where XXXXX is the Token of your Bot.
 
 Finally, if you are on Windows run 'start.bat' and you are good to go. The bot is running and will continue to do so, until you close the terminal/cmd or until someone types "!shutdown" in a text channel that the Bot can see.
 
