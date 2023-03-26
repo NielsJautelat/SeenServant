@@ -1,4 +1,7 @@
+# Your personal .env file with your Token
 .env
+
+# Audio files, downloaded but unconverted audio files and failed downloads of audio files
 *.webm
 *.mp3
 *.part
