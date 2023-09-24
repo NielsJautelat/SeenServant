@@ -4,4 +4,5 @@
 # Audio files, downloaded but unconverted audio files and failed downloads of audio files
 *.webm
 *.mp3
+*.m4a
 *.part
