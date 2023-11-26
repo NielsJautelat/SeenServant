@@ -79,30 +79,44 @@ async def on_ready():
 @bot.command(name='join', help='The Bot joines the voice channel you are currently in')
 async def join(ctx):
     print("Bot Command: join from User {}".format(ctx.message.author))
-    await join_InternalFunction(ctx)
+    await join_InternalFunction(ctx, True)
 
 # This internal function will make the bot join the voice channel that you are currently in.
 # If you aren't in one, it will be very upset at you.
 # In case you restarted the bot, while it was in a voice channel, it won't realize that it still is in one.
-async def join_InternalFunction(ctx):
+async def join_InternalFunction(ctx, showMessage):
     print("Internal Function: join from User {}".format(ctx.message.author))
+    if not ctx.message.author.voice:
+        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
+        return
+
+    target_channel = ctx.message.author.voice.channel
+
+    # Check if the bot is already connected to a voice channel in the guild
+    for vc in bot.voice_clients:
+        if vc.guild == ctx.guild:
+            # If the bot is in the same channel as the user, do nothing
+            if vc.channel == target_channel:
+                if showMessage:
+                    await ctx.send("The bot is already in your voice channel.")
+                return
+            # If the bot is in a different channel, disconnect and then connect to the new channel
+            else:
+                await vc.disconnect()
+
     try:
-        if not ctx.message.author.voice:
-            await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
-            return
-        else:
-            channel = ctx.message.author.voice.channel
-            await channel.connect()
+        await target_channel.connect()
     except Exception as e:
         print("Error: could not join voice channel of {}".format(ctx.message.author.name))
         await ctx.send("The bot failed to join the voice channel")
         print(e)
         return
+
     try:
-        await ctx.guild.change_voice_state(channel=channel, self_mute=False, self_deaf=True)
+        await ctx.guild.change_voice_state(channel=target_channel, self_mute=False, self_deaf=True)
     except Exception as e:
         print("ERROR: Failed to deafen the bot")
-        await ctx.send("The bot failed to mute itself. Sorry for the inconvenience. You can always try the deafen command at a later point. Also don't trust any bot that isn't deafend.")
+        await ctx.send("The bot failed to deafen itself. Sorry for the inconvenience. You can always try the deafen command at a later point. Also don't trust any bot that isn't deafend.")
         print(e)
 
 # This command will make the bot leave the voice channel it is in.
@@ -130,7 +144,7 @@ async def leave(ctx):
 async def play(ctx, file):
     print("Bot Command: play from User {}".format(ctx.message.author))
     stoploop(ctx)
-    await join_InternalFunction(ctx)
+    await join_InternalFunction(ctx, False)
     try:
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
@@ -183,7 +197,7 @@ async def TavernMusic(ctx):
 async def playcollection(ctx, folder):
     print("Internal Function: playcollection")
     stoploop(ctx)
-    await join_InternalFunction(ctx)
+    await join_InternalFunction(ctx, False)
     try:
         voice_client = get(bot.voice_clients, guild=ctx.guild)
     except Exception as e:
